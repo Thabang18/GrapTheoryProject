@@ -1,6 +1,8 @@
 package acsse.csc3a.graph;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.jwetherell.algorithms.data_structures.Graph;
 
@@ -9,6 +11,7 @@ public class ServiceGraph extends Graph
 	// Attributes 
 	static ArrayList vertices = null;
 	static ArrayList edges = null;
+	static Graph graph = null;
 	
 	public ServiceGraph(int nVertices, int nEdges)
 	{
@@ -17,6 +20,14 @@ public class ServiceGraph extends Graph
         edges = new ArrayList<>();
     }
 	
+	/**
+	 * Creates a new graph by adding vertices and edges to it.
+	 * 
+	 * @param graph The graph object to which vertices and edges will be added.
+	 * @param vertices The array of vertices to add to the graph.
+	 * @param edges The array of edges to add to the graph.
+	 * @throws IllegalArgumentException if the vertices or edges are null or empty.
+	 */
 	public static void CreateGraph()
 	{
 		Vertex<Integer> MOTUPA = new Vertex<Integer>(1, 20);
@@ -117,9 +128,80 @@ public class ServiceGraph extends Graph
 		edges.add(NTBL);
 		edges.add(PLFM);
 		
-		Graph graph = new Graph(Graph.TYPE.UNDIRECTED,vertices, edges);
+		graph = new Graph(Graph.TYPE.UNDIRECTED,vertices, edges);
 		System.out.println(graph);
 	}
 
+	
+	
+	/**
+	 * Uses Prim's algorithm to find the minimum spanning tree of a given graph.
+	 * 
+	 * @param graph the graph to find the minimum spanning tree for
+	 * @return an ArrayList of Edges representing the minimum spanning tree
+	 */
+	public static ArrayList<Edge> PrimsAlgorithm(Graph<Integer> graph)
+	{
+	    // Initialize the result list and the visited set
+	    ArrayList<Edge> result = new ArrayList<>();
+	    Set<Vertex<Integer>> visited = new HashSet<>();
+	    
+	    // Pick any vertex as the starting vertex
+	    Vertex<Integer> start = graph.getVertices().iterator().next();
+	    visited.add(start);
+	    
+	    // Loop until all vertices are visited
+	    while (visited.size() != graph.getVertices().size()) 
+	    {
+	        Edge minEdge = null;
+	        Vertex<Integer> minVertex = null;
+	        
+	        // For each visited vertex, find the minimum-weight edge that connects to an unvisited vertex
+	        for (Vertex<Integer> vertex : visited) 
+	        {
+	            for (Edge edge : vertex.getEdges()) 
+	            {
+	                Vertex<Integer> to = edge.getToVertex();
+	                if (!visited.contains(to)) {
+	                    if (minEdge == null || edge.getCost() < minEdge.getCost()) 
+	                    {
+	                        minEdge = edge;
+	                        minVertex = to;
+	                    }
+	                }
+	            }
+	        }
+	        
+	        // Add the minimum-weight edge to the result and mark the corresponding vertex as visited
+	        if (minEdge != null && minVertex != null) 
+	        {
+	            result.add(minEdge);
+	            visited.add(minVertex);
+	        }
+	    }
+	   
+	    return result;
+	}
+	
 
+
+	
+	/**
+	 * @return the graph representation of the service network
+	 */
+	public Graph<Integer> getGraph()
+	{
+		return graph;
+	}
+
+	public static void showResults()
+	{
+		ArrayList<Edge> mst = PrimsAlgorithm(graph);
+	    for (Edge edge : mst) 
+	    {
+	        System.out.println(edge.getCost());
+	    }
+	}
+
+	
 }
