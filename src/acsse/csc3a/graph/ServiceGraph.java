@@ -30,75 +30,77 @@ public class ServiceGraph extends Graph
 	 */
 	public static void CreateGraph()
 	{
-		Vertex<Integer> MOTUPA = new Vertex<Integer>(1, 20);
-		Vertex<Integer> MORUTJI = new Vertex<Integer>(2, 21);
-		Vertex<Integer> MODJADJI = new Vertex<Integer>(3, 22);
-		Vertex<Integer> MORAPALALA = new Vertex<Integer>(4, 23);
-		Vertex<Integer> BLOCK12 = new Vertex<Integer>(5, 24);
-		Vertex<Integer> BLOCK8 = new Vertex<Integer>(6, 25);
-		Vertex<Integer> FEMANE = new Vertex<Integer>(7, 26);
-		Vertex<Integer> MOHLABANENG = new Vertex<Integer>(8, 27);
-		Vertex<Integer> NTATA = new Vertex<Integer>(9, 28);
-		Vertex<Integer> BLOCK17 = new Vertex<Integer>(10, 29);
-	    Vertex<Integer> BELLEVUE = new Vertex<Integer>(11, 30);
-		Vertex<Integer> JAMELA = new Vertex<Integer>(12, 31);
-		Vertex<Integer> KHESOTHOPA = new Vertex<Integer>(13, 32);
-		Vertex<Integer> MOKWAKWAILA = new Vertex<Integer>(14, 33);
-		Vertex<Integer> POLASENE = new Vertex<Integer>(15, 34);
-		Vertex<Integer> MOTHOBEKHI = new Vertex<Integer>(16, 35);
-		Vertex<Integer> MATSHWI = new Vertex<Integer>(17, 36);
-		Vertex<Integer> MATIPANE = new Vertex<Integer>(18, 37);
-		Vertex<Integer> MADUMELENG = new Vertex<Integer>(19, 38);
+
+		Location GaMotupa = new Location(1, "Ga-Motupa", 51.5074, 0.1278);
+		Location Morutji = new Location(2, "Morutji", 51.5074, 0.1278);
+		Location Modjadji = new Location(3, "Modjadji", 51.5074, 0.1278);
+		Location Morapalala = new Location(4, "Morapalala", 51.5074, 0.1278);
+		Location Block12 = new Location(5, "Block 12", 51.5074, 0.1278);
+		Location Block8 = new Location(6, "Block 8", 51.5074, 0.1278);
+		Location Femane = new Location(7, "Femane", 51.5074, 0.1278);
+		Location Mohlabaneng = new Location(8, "Mohlabaneng", 51.5074, 0.1278);
+		Location Ntata = new Location(9, "Ntata", 51.5074, 0.1278);
+		Location Block17 = new Location(10, "Block 17", 51.5074, 0.1278);
+		Location Bellevue = new Location(11, "Bellevue", 51.5074, 0.1278);
+		Location Jamela = new Location(12, "Jamela", 51.5074, 0.1278);
+		Location Khesothopa = new Location(13, "Khesothopa", 51.5074, 0.1278);
+		Location Mokwakwaila = new Location(14, "Mokwakwaila", 51.5074, 0.1278);
+		Location Polasene = new Location(15, "Polasene", 51.5074, 0.1278);
+		Location Mothobekhi = new Location(16, "Mothobekhi", 51.5074, 0.1278);
+		Location Matshwi = new Location(17, "Matshwi", 51.5074, 0.1278);
+		Location Matipane = new Location(18, "Matipane", 51.5074, 0.1278);
+		Location Madumeleng = new Location(19, "Madumeleng", 51.5074, 0.1278);
+	
 		
-		Edge<Integer> FMNT = new Edge(5,FEMANE,NTATA);
-		Edge<Integer> NTBL = new Edge(11,NTATA,BELLEVUE);
-		Edge<Integer> B17BL = new Edge(24,BLOCK17,BELLEVUE);
-		Edge<Integer> BLJM = new Edge(10,BELLEVUE,JAMELA);
-		Edge<Integer> BL12BL17 = new Edge(20,BLOCK12,BLOCK17);
-		Edge<Integer> PLFM = new Edge(5,POLASENE,FEMANE);
-		Edge<Integer> MKFM = new Edge(4,MOKWAKWAILA,FEMANE);
-		Edge<Integer> MRPMK = new Edge(11,MORAPALALA,MOKWAKWAILA);
-		Edge<Integer> MKMT = new Edge(11,MOKWAKWAILA,MATIPANE);
-		Edge<Integer> MTM = new Edge(6,MATIPANE,MATSHWI);
-		Edge<Integer> MTHM = new Edge(7,MOTHOBEKHI,MATSHWI);
-		Edge<Integer> MTHPL = new Edge(4,MOTHOBEKHI,POLASENE);
-		Edge<Integer> MTPMD = new Edge(25,MOTUPA,MADUMELENG);
-		Edge<Integer> MTPMRJ = new Edge(9,MOTUPA,MORUTJI);
-		Edge<Integer> MRJMDJ = new Edge(8,MORUTJI,MODJADJI);
-		Edge<Integer> FMMH = new Edge(7,FEMANE,MOHLABANENG);
-		Edge<Integer> MHKH = new Edge(2,MOHLABANENG,KHESOTHOPA);
-		Edge<Integer> KHJM = new Edge(3,KHESOTHOPA,JAMELA);
-		Edge<Integer> KHBL = new Edge(8,KHESOTHOPA,BELLEVUE);
-		Edge<Integer> NTB17 = new Edge(17,NTATA,BLOCK17);
-		Edge<Integer> MTHJM = new Edge(21,MOTHOBEKHI,JAMELA);
-		Edge<Integer> MTHMH = new Edge(17,MOTHOBEKHI,MOHLABANENG);
-		Edge<Integer> MTPL = new Edge(5,MATIPANE,POLASENE);
-		Edge<Integer> BL8FM = new Edge(18,BLOCK8,FEMANE);
-		Edge<Integer> BL12BL8 = new Edge(4,BLOCK12,BLOCK8);
-		Edge<Integer> MRPBL12 = new Edge(17,MORAPALALA,BLOCK12);
-		Edge<Integer> MDJMRP = new Edge(12,MODJADJI,MORAPALALA);
-		Edge MRPMT = new Edge(7,MORAPALALA,MATIPANE);
-		Edge MDM = new Edge(6,MADUMELENG,MATSHWI);
+		Edge<Integer> FMNT = new Edge(5,Femane,Ntata);
+		Edge<Integer> NTBL = new Edge(11,Ntata,Bellevue);
+		Edge<Integer> B17BL = new Edge(24,Block17,Bellevue);
+		Edge<Integer> BLJM = new Edge(10,Bellevue,Jamela);
+		Edge<Integer> BL12BL17 = new Edge(20,Block12,Block17);
+		Edge<Integer> PLFM = new Edge(5,Polasene,Femane);
+		Edge<Integer> MKFM = new Edge(4,Mokwakwaila,Femane);
+		Edge<Integer> MRPMK = new Edge(11,Morapalala,Mokwakwaila);
+		Edge<Integer> MKMT = new Edge(11,Mokwakwaila,Matipane);
+		Edge<Integer> MTM = new Edge(6,Matipane,Matshwi);
+		Edge<Integer> MTHM = new Edge(7,Mothobekhi,Matshwi);
+		Edge<Integer> MTHPL = new Edge(4,Mothobekhi,Polasene);
+		Edge<Integer> MTPMD = new Edge(25,GaMotupa,Madumeleng);
+		Edge<Integer> MTPMRJ = new Edge(9,GaMotupa,Morutji);
+		Edge<Integer> MRJMDJ = new Edge(8,Morutji,Modjadji);
+		Edge<Integer> FMMH = new Edge(7,Femane,Mohlabaneng);
+		Edge<Integer> MHKH = new Edge(2,Mohlabaneng,Khesothopa);
+		Edge<Integer> KHJM = new Edge(3,Khesothopa,Jamela);
+		Edge<Integer> KHBL = new Edge(8,Khesothopa,Bellevue);
+		Edge<Integer> NTB17 = new Edge(17,Ntata,Block17);
+		Edge<Integer> MTHJM = new Edge(21,Mothobekhi,Jamela);
+		Edge<Integer> MTHMH = new Edge(17,Mothobekhi,Mohlabaneng);
+		Edge<Integer> MTPL = new Edge(5,Matipane,Polasene);
+		Edge<Integer> BL8FM = new Edge(18,Block8,Femane);
+		Edge<Integer> BL12BL8 = new Edge(4,Block12,Block8);
+		Edge<Integer> MRPBL12 = new Edge(17,Morapalala,Block12);
+		Edge<Integer> MDJMRP = new Edge(12,Modjadji,Morapalala);
+		Edge MRPMT = new Edge(7,Morapalala,Matipane);
+		Edge MDM = new Edge(6,Madumeleng,Matshwi);
 		
-		vertices.add(BELLEVUE);
-		vertices.add(JAMELA);
-		vertices.add(MADUMELENG);
-		vertices.add(MATSHWI);
-		vertices.add(MODJADJI);
-		vertices.add(POLASENE);
-		vertices.add(BLOCK12);
-		vertices.add(BLOCK17);
-		vertices.add(MORAPALALA);
-		vertices.add(MORUTJI);
-		vertices.add(MOTUPA);
-		vertices.add(MOHLABANENG);
-		vertices.add(MATIPANE);
-		vertices.add(BLOCK8);
-		vertices.add(MOTHOBEKHI);
-		vertices.add(FEMANE);
-		vertices.add(NTATA);
-		vertices.add(MOKWAKWAILA);
-		vertices.add(MOTUPA);
+		vertices.add(Bellevue);
+		vertices.add(Jamela);
+		vertices.add(Madumeleng);
+		vertices.add(Matshwi);
+		vertices.add(Modjadji);
+		vertices.add(Polasene);
+		vertices.add(Block12);
+		vertices.add(Block17);
+		vertices.add(Morapalala);
+		vertices.add(Morutji);
+		vertices.add(GaMotupa);
+		vertices.add(Mohlabaneng);
+		vertices.add(Matipane);
+		vertices.add(Block8);
+		vertices.add(Mothobekhi);
+		vertices.add(Femane);
+		vertices.add(Ntata);
+		vertices.add(Mokwakwaila);
+		vertices.add(GaMotupa);
 		
 		
 		edges.add(B17BL);
@@ -199,6 +201,7 @@ public class ServiceGraph extends Graph
 		ArrayList<Edge> mst = PrimsAlgorithm(graph);
 	    for (Edge edge : mst) 
 	    {
+	    	System.out.println("..........................");
 	        System.out.println(edge.getCost());
 	    }
 	}
