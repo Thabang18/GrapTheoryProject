@@ -1,10 +1,13 @@
 package acsse.csc3a.Application;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 
 import com.jwetherell.algorithms.data_structures.Graph;
 import com.jwetherell.algorithms.data_structures.Graph.Edge;
@@ -22,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -41,6 +45,7 @@ public class GraphDisplay extends StackPane
     ArrayList<Location> vertices = vertices = new ArrayList<>();
     ArrayList<Edge> edges = null;
     File chosenFile = null;
+    File file = new File("vertices.txt");
 
     public GraphDisplay(Graph<Integer> graph) 
     {
@@ -260,6 +265,13 @@ public class GraphDisplay extends StackPane
 		Button btnSave = new Button("Save to file");
 		grdpane.add(btnSave, 4,0,2,1);
 		
+		Button btnLoad = new Button("Load Locations");
+		grdpane.add(btnLoad, 6,0,1,1);
+		
+		TextArea txtResult = new TextArea();
+		grdpane.add(txtResult, 0, 3,5,7); 
+
+		
 		
 		Location GaMotupa = new Location(1, "Ga-Motupa", 51.5074, 0.1278);
 		GaMotupa.setX(30);
@@ -439,9 +451,86 @@ public class GraphDisplay extends StackPane
 
 		});
 		
+		btnLoad.setOnAction(e ->
+		{
+			try (Scanner scanner = new Scanner(file)) {
+			    while (scanner.hasNextLine()) {
+			        String line = scanner.nextLine();
+			        String[] parts = line.split(",");
+			        double latitude = Double.parseDouble(parts[0]);
+			        double longitude = Double.parseDouble(parts[1]);
+			        String name = parts[2];
+			        double x = Double.parseDouble(parts[3]);
+			        double y = Double.parseDouble(parts[4]);
+			        Location l = new Location(50,name,latitude,longitude);
+			        l.setX(x);
+			        l.setY(y);
+			        vertices.add(l);
+			    }
+			} catch (FileNotFoundException e3) {
+			    e3.printStackTrace();
+			}
+		});
+		
 		btnSave.setOnAction(e ->
 		{
-			
+			// Create a canvas to draw the graph on
+		    Canvas canvas = new Canvas(500, 500);
+		    grdpane.add(canvas, 0, 1, 3, 1);
+		    
+
+		    // Get the graphics context of the canvas
+		    GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		    // Clear the canvas
+		    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		    // Draw the vertices
+		    for (Location location : vertices) 
+		    {
+		        double x = location.getX();
+		        double y = location.getY();
+		        gc.fillOval(x, y, 10, 10);
+		        gc.fillText(location.getName(), x + 12, y + 6);
+		    }
+		    
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mokwakwaila.getX(), Mokwakwaila.getY(), canvas);
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Ntata.getX(), Ntata.getY(), canvas);
+		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Bellevue.getX(), Bellevue.getY(), canvas);
+		    drawLineBetweenLocations(Block17.getX(), Block17.getY(), Bellevue.getX(), Bellevue.getY(), canvas);
+		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Block17.getX(), Block17.getY(), canvas);
+		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Block8.getX(), Block8.getY(), canvas);
+		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block12.getX(), Block12.getY(), canvas);
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Polasene.getX(), Polasene.getY(), canvas);
+		    drawLineBetweenLocations(Polasene.getX(), Polasene.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas);
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mohlabaneng.getX(), Mohlabaneng.getY(), canvas);
+		    drawLineBetweenLocations(Bellevue.getX(), Bellevue.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas);
+		    drawLineBetweenLocations(Mohlabaneng.getX(), Mohlabaneng.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas);
+		    drawLineBetweenLocations(Khesothopa.getX(), Khesothopa.getY(), Jamela.getX(), Jamela.getY(), canvas);
+		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Matipane.getX(), Matipane.getY(), canvas);
+		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Matshwi.getX(), Matshwi.getY(), canvas);
+		    drawLineBetweenLocations(Matshwi.getX(), Matshwi.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas);
+		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Polasene.getX(), Polasene.getY(), canvas);  
+		    drawLineBetweenLocations(Block12.getX(), Block12.getY(), Morapalala.getX(), Morapalala.getY(), canvas);
+		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Modjadji.getX(), Modjadji.getY(), canvas);
+		    drawLineBetweenLocations(Modjadji.getX(), Modjadji.getY(), Morutji.getX(), Morutji.getY(), canvas);
+		    drawLineBetweenLocations(Morutji.getX(), Morutji.getY(), GaMotupa.getX(), GaMotupa.getY(), canvas);
+		    drawLineBetweenLocations(GaMotupa.getX(), GaMotupa.getY(), Madumeleng.getX(), Madumeleng.getY(), canvas);
+		    drawLineBetweenLocations(Madumeleng.getX(), Madumeleng.getY(), Matshwi.getX(), Matshwi.getY(), canvas);
+		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Matipane.getX(), Matipane.getY(), canvas);
+		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block17.getX(), Block17.getY(), canvas);
+		      
+		    
+		    try (FileWriter writer = new FileWriter(file))
+		    {
+		        // Loop through each vertex in the vertices list
+		        for (Location vertex : vertices) {
+		            // Write the vertex's information to the file
+		            writer.write(vertex.getLatitude() + "," + vertex.getLongitude() + "," + vertex.getName() + "," + vertex.getX()+","+ vertex.getY()+ "\n");
+		        }
+		    } catch (IOException e2) {
+		        e2.printStackTrace();
+		    }
 		});
 
 		
@@ -492,19 +581,6 @@ public class GraphDisplay extends StackPane
 	    drawLineBetweenLocations(GaMotupa.getX(), GaMotupa.getY(), Madumeleng.getX(), Madumeleng.getY(), canvas);
 	    drawLineBetweenLocations(Madumeleng.getX(), Madumeleng.getY(), Matshwi.getX(), Matshwi.getY(), canvas);
 	    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Matipane.getX(), Matipane.getY(), canvas);
-	    
-	    
-	    
-	    // Fix this.
-	    /*
-	    for (Edge<Integer> edge : vertices.getEdges()) 
-	    {
-	        Location connectedLocation = (Location) edge.getToVertex();
-	        double angle2 = 2 * Math.PI * vertices.indexOf(connectedLocation) / vertices.size();
-	        int x2 = (int) (width / 2 + r * Math.cos(angle2));
-	        int y2 = (int) (height / 2 + r * Math.sin(angle2));
-	        gc.drawLine(x1, y1, x2, y2);
-	    }*/
 	       		
 		return grdpane;
     }
