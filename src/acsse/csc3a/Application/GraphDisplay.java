@@ -1,11 +1,19 @@
 package acsse.csc3a.Application;
 
+import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -14,6 +22,8 @@ import com.jwetherell.algorithms.data_structures.Graph.Edge;
 import com.jwetherell.algorithms.data_structures.Graph.Vertex;
 
 import acsse.csc3a.graph.Location;
+import acsse.csc3a.graph.ServiceGraph;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -35,6 +45,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -62,6 +73,22 @@ public class GraphDisplay extends StackPane
        
     }
     
+    public void drawLineBetweenLocations(double startX, double startY, double endX, double endY, Canvas canvas, double weight) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+
+        gc.strokeLine(startX-1, startY+4, endX+2, endY+2);
+
+        double midX = (startX + endX) / 2;
+        double midY = (startY + endY) / 2;
+        
+        String weightString = String.valueOf(weight);
+        gc.setFill(Color.RED);
+        gc.fillText(weightString+"KM", midX+2, midY+2);
+      //  gc.fillText(weightString+"KM", midX, midY);
+    }
+    
     public GraphDisplay()
     {
 		// Create the GUI part
@@ -74,11 +101,12 @@ public class GraphDisplay extends StackPane
    	titledpane.setText("Resource distributor");
    	titledpane.setPrefWidth(810);
    	titledpane.setContent(grdpane);
-   	titledpane.setCollapsible(false);
+   	titledpane.setCollapsible(true);
    	
    	// After adding a titledpane
    	
    	root.setLeft(titledpane);
+   	//root.setRight(tpane);
    	
    	Scene scene = new Scene(root, 600, 400);
    	Stage stage = new Stage();
@@ -260,16 +288,22 @@ public class GraphDisplay extends StackPane
 		grdpane.add(btnUpdateLocation, 2,0,1,1);
 		
 		Button btnSolve = new Button("Solve Graph");
-		grdpane.add(btnSolve, 3, 0,1,1);
+		grdpane.add(btnSolve, 0, 2,1,1);
 		
 		Button btnSave = new Button("Save to file");
 		grdpane.add(btnSave, 4,0,2,1);
 		
 		Button btnLoad = new Button("Load Locations");
 		grdpane.add(btnLoad, 6,0,1,1);
+		 
+		Button btnRestart = new Button("Restart application");
+		grdpane.add(btnRestart, 3, 0,1,1);
+		
+		Button btnAddEdges = new Button("Connect");
+		grdpane.add(btnAddEdges, 1, 2,4,1);
 		
 		TextArea txtResult = new TextArea();
-		grdpane.add(txtResult, 0, 3,5,7); 
+		grdpane.add(txtResult, 0, 3,8,4); 
 
 		
 		
@@ -448,7 +482,81 @@ public class GraphDisplay extends StackPane
 		
 		btnRemoveLocation.setOnAction(e ->
 		{
+			/* TextInputDialog dialog = new TextInputDialog();
+			    dialog.setTitle("Remove Location");
+			    dialog.setHeaderText("Enter the name of the location to remove:");
+			    Optional<String> result = dialog.showAndWait();
+			    if (result.isPresent()) {
+			        String locationName = result.get();
 
+			        ArrayList<Location> vertices = new ArrayList<>();
+			        try (BufferedReader br = new BufferedReader(new FileReader("vertices.txt"))) {
+			          /*  String line;
+			            while ((line = br.readLine()) != null) {
+			                String[] parts = line.split(",");
+			                String name = parts[0];
+			                double x = Double.parseDouble(parts[1]);
+			                double y = Double.parseDouble(parts[2]);
+			                */
+			        	
+			        /*	String line;
+			            while ((line = br.readLine()) != null) {
+			                String[] parts = line.split(",", 5);
+			                String name = parts[0];
+			                double x = Double.parseDouble(parts[3]);
+			                double y = Double.parseDouble(parts[4]);
+			             //   vertices.add(new Location(name, x, y));
+			                Location newLocation = new Location(1,name,50,40);
+				            newLocation.setX(x);
+				            newLocation.setY(y);
+				            vertices.remove(newLocation);
+			            }
+			        } catch (IOException ex) {
+			            ex.printStackTrace();
+			        }
+
+			        int indexToRemove = -1;
+			        for (int i = 0; i < vertices.size(); i++) {
+			            if (vertices.get(i).getName().equals(locationName)) {
+			                indexToRemove = i;
+			                break;
+			            }
+			        }
+
+			        if (indexToRemove != -1) {
+			            vertices.remove(indexToRemove);
+			        }
+
+			        try (PrintWriter pw = new PrintWriter("vertices.txt")) {
+			            for (Location location : vertices) {
+			            	pw.println(location.getName() + "," + location.getX() + "," + location.getY());
+			            }
+			            } catch (IOException ex)
+			             {
+			            ex.printStackTrace();
+			            }}*/
+			
+		/*	try (Scanner scanner = new Scanner(file)) {
+			    while (scanner.hasNextLine()) {
+			        String line = scanner.nextLine();
+			        String[] parts = line.split(",");
+			        double latitude = Double.parseDouble(parts[0]);
+			        double longitude = Double.parseDouble(parts[1]);
+			        String name = parts[2];
+			        double x = Double.parseDouble(parts[3]);
+			        double y = Double.parseDouble(parts[4]);
+			        Location l = new Location(50,name,latitude,longitude);
+			        l.setX(x);
+			        l.setY(y);
+			        vertices.remove(l);
+			    }
+			} catch (FileNotFoundException e3) {
+			    e3.printStackTrace();
+			}*/
+			
+			removeLastLocation(vertices);
+			removeLastLine("vertices.txt");
+			
 		});
 		
 		btnLoad.setOnAction(e ->
@@ -470,6 +578,38 @@ public class GraphDisplay extends StackPane
 			} catch (FileNotFoundException e3) {
 			    e3.printStackTrace();
 			}
+		});
+		
+		btnRestart.setOnAction(e ->
+		{
+		    try {
+		        // Get the command to launch the current Java application
+		        String javaCommand = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+		        String classpath = System.getProperty("java.class.path");
+		        String mainClass = System.getenv("JAVA_MAIN_CLASS_");
+		        if (mainClass == null) {
+		            mainClass = GraphDisplay.class.getName();
+		        }
+
+		        // Build the command to launch the new instance of the application
+		        List<String> command = new ArrayList<>();
+		        command.add(javaCommand);
+		        command.add("-cp");
+		        command.add(classpath);
+		        command.add(mainClass);
+
+		        // Launch the new instance of the application
+		        new ProcessBuilder(command).start();
+		    	  // Get the current application's path
+
+		    } catch (IOException ex) 
+		    {
+		        ex.printStackTrace();
+		    }
+
+		    // Exit the current instance of the application
+		    Platform.exit();
+		    
 		});
 		
 		btnSave.setOnAction(e ->
@@ -494,31 +634,33 @@ public class GraphDisplay extends StackPane
 		        gc.fillText(location.getName(), x + 12, y + 6);
 		    }
 		    
-		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mokwakwaila.getX(), Mokwakwaila.getY(), canvas);
-		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Ntata.getX(), Ntata.getY(), canvas);
-		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Bellevue.getX(), Bellevue.getY(), canvas);
-		    drawLineBetweenLocations(Block17.getX(), Block17.getY(), Bellevue.getX(), Bellevue.getY(), canvas);
-		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Block17.getX(), Block17.getY(), canvas);
-		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Block8.getX(), Block8.getY(), canvas);
-		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block12.getX(), Block12.getY(), canvas);
-		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Polasene.getX(), Polasene.getY(), canvas);
-		    drawLineBetweenLocations(Polasene.getX(), Polasene.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas);
-		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mohlabaneng.getX(), Mohlabaneng.getY(), canvas);
-		    drawLineBetweenLocations(Bellevue.getX(), Bellevue.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas);
-		    drawLineBetweenLocations(Mohlabaneng.getX(), Mohlabaneng.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas);
-		    drawLineBetweenLocations(Khesothopa.getX(), Khesothopa.getY(), Jamela.getX(), Jamela.getY(), canvas);
-		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Matipane.getX(), Matipane.getY(), canvas);
-		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Matshwi.getX(), Matshwi.getY(), canvas);
-		    drawLineBetweenLocations(Matshwi.getX(), Matshwi.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas);
-		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Polasene.getX(), Polasene.getY(), canvas);  
-		    drawLineBetweenLocations(Block12.getX(), Block12.getY(), Morapalala.getX(), Morapalala.getY(), canvas);
-		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Modjadji.getX(), Modjadji.getY(), canvas);
-		    drawLineBetweenLocations(Modjadji.getX(), Modjadji.getY(), Morutji.getX(), Morutji.getY(), canvas);
-		    drawLineBetweenLocations(Morutji.getX(), Morutji.getY(), GaMotupa.getX(), GaMotupa.getY(), canvas);
-		    drawLineBetweenLocations(GaMotupa.getX(), GaMotupa.getY(), Madumeleng.getX(), Madumeleng.getY(), canvas);
-		    drawLineBetweenLocations(Madumeleng.getX(), Madumeleng.getY(), Matshwi.getX(), Matshwi.getY(), canvas);
-		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Matipane.getX(), Matipane.getY(), canvas);
-		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block17.getX(), Block17.getY(), canvas);
+		    //grdpane.getChildren().remove(vertices.size()-1);
+		    
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mokwakwaila.getX(), Mokwakwaila.getY(), canvas,MKFM.getCost());
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Ntata.getX(), Ntata.getY(), canvas,FMNT.getCost());
+		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Bellevue.getX(), Bellevue.getY(), canvas,NTBL.getCost());
+		    drawLineBetweenLocations(Block17.getX(), Block17.getY(), Bellevue.getX(), Bellevue.getY(), canvas,B17BL.getCost());
+		    drawLineBetweenLocations(Ntata.getX(), Ntata.getY(), Block17.getX(), Block17.getY(), canvas,NTB17.getCost());
+		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Block8.getX(), Block8.getY(), canvas,MKFM.getCost());
+		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block12.getX(), Block12.getY(), canvas,BL12BL8.getCost());
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Polasene.getX(), Polasene.getY(), canvas,PLFM.getCost());
+		    drawLineBetweenLocations(Polasene.getX(), Polasene.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas,MTHPL.getCost());
+		    drawLineBetweenLocations(Femane.getX(), Femane.getY(), Mohlabaneng.getX(), Mohlabaneng.getY(), canvas,FMMH.getCost());
+		    drawLineBetweenLocations(Bellevue.getX(), Bellevue.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas,KHBL.getCost());
+		    drawLineBetweenLocations(Mohlabaneng.getX(), Mohlabaneng.getY(), Khesothopa.getX(), Khesothopa.getY(), canvas,MHKH.getCost());
+		    drawLineBetweenLocations(Khesothopa.getX(), Khesothopa.getY(), Jamela.getX(), Jamela.getY(), canvas,KHJM.getCost());
+		    drawLineBetweenLocations(Mokwakwaila.getX(), Mokwakwaila.getY(), Matipane.getX(), Matipane.getY(), canvas,MKMT.getCost());
+		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Matshwi.getX(), Matshwi.getY(), canvas,MTM.getCost());
+		    drawLineBetweenLocations(Matshwi.getX(), Matshwi.getY(), Mothobekhi.getX(), Mothobekhi.getY(), canvas,MTHM.getCost());
+		    drawLineBetweenLocations(Matipane.getX(), Matipane.getY(), Polasene.getX(), Polasene.getY(), canvas,MTPL.getCost());  
+		    drawLineBetweenLocations(Block12.getX(), Block12.getY(), Morapalala.getX(), Morapalala.getY(), canvas,MRPBL12.getCost());
+		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Modjadji.getX(), Modjadji.getY(), canvas,MDJMRP.getCost());
+		    drawLineBetweenLocations(Modjadji.getX(), Modjadji.getY(), Morutji.getX(), Morutji.getY(), canvas,MRJMDJ.getCost());
+		    drawLineBetweenLocations(Morutji.getX(), Morutji.getY(), GaMotupa.getX(), GaMotupa.getY(), canvas,MTPMRJ.getCost());
+		    drawLineBetweenLocations(GaMotupa.getX(), GaMotupa.getY(), Madumeleng.getX(), Madumeleng.getY(), canvas,MTPMD.getCost());
+		    drawLineBetweenLocations(Madumeleng.getX(), Madumeleng.getY(), Matshwi.getX(), Matshwi.getY(), canvas,MDM.getCost());
+		    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Matipane.getX(), Matipane.getY(), canvas,MRPMT.getCost());
+		    drawLineBetweenLocations(Block8.getX(), Block8.getY(), Block17.getX(), Block17.getY(), canvas,MKFM.getCost());
 		      
 		    
 		    try (FileWriter writer = new FileWriter(file))
@@ -532,11 +674,59 @@ public class GraphDisplay extends StackPane
 		        e2.printStackTrace();
 		    }
 		});
-
 		
-        
+		btnSolve.setOnAction(e -> 
+		{
+			//ServiceGraph graph = new ServiceGraph();
+			//graph.showResults();
+		});
 		
+		btnAddEdges.setOnAction(e-> 
+		{
+			
+		    TextInputDialog dialog = new TextInputDialog();
+		    dialog.setTitle("Add Edge");
+		    dialog.setHeaderText("Enter the two locations and the weight separated by commas:");
+		    dialog.setContentText("Format: Location1,Location2,Weight");
+		    
+			 // Create a canvas to draw the graph on
+		    Canvas canvas = new Canvas(500, 500);
+		    grdpane.add(canvas, 0, 1, 3, 1);
 
+		    // Get the graphics context of the canvas
+		    GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		    // Clear the canvas
+		    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		    Optional<String> result = dialog.showAndWait();
+		    if (result.isPresent()) {
+		        String[] input = result.get().split(",");
+		        String location1 = input[0].trim();
+		        String location2 = input[1].trim();
+		        int weight = Integer.parseInt(input[2].trim());
+
+		        Location vertex1 = null;
+		        Location vertex2 = null;
+
+		        for (Location location : vertices) {
+		            if (location.getName().equals(location1)) {
+		                vertex1 = location;
+		            } else if (location.getName().equals(location2)) {
+		                vertex2 = location;
+		            }
+		        }
+		        
+		        if (vertex1 != null && vertex2 != null) 
+		        {
+		        	drawLineBetweenLocations(vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY(), canvas,weight);
+		        } else {
+		           System.out.println("Could not draw the edge.");
+		        }
+		    }
+		
+		});
+		
 		
 		 // Create a canvas to draw the graph on
 	    Canvas canvas = new Canvas(500, 500);
@@ -583,6 +773,33 @@ public class GraphDisplay extends StackPane
 	    drawLineBetweenLocations(Morapalala.getX(), Morapalala.getY(), Matipane.getX(), Matipane.getY(), canvas);
 	       		
 		return grdpane;
+    }
+    
+    
+    /**
+     * Utility methods 
+     */
+    
+    public void removeLastLine(String fileName) 
+    {
+        try {
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(fileName));
+
+            // Remove the last line from the list
+            lines.remove(lines.size() - 1);
+
+            // Write the updated lines back to the file
+            Files.write(Paths.get(fileName), lines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void removeLastLocation(ArrayList<Location> locations) {
+        if (!locations.isEmpty()) {
+            locations.remove(locations.size() - 1);
+        }
     }
 }
 

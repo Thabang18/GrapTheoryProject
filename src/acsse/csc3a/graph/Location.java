@@ -10,6 +10,7 @@ public class Location extends Vertex<Integer>
     private double longitude;
     private double x;
     private double y;
+    private int id = 0;
 
 	public Location(Integer value)
 	{
@@ -20,10 +21,16 @@ public class Location extends Vertex<Integer>
 	public Location(Integer id, String name, double latitude, double longitude)
 	{
         super(id);
+        this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
     }
+	
+	public int getID()
+	{
+		return id;
+	}
 	
 	public String getName() 
 	{

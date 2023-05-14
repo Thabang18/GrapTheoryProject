@@ -1,7 +1,19 @@
 package acsse.csc3a.graph;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.jwetherell.algorithms.data_structures.Graph;
@@ -12,6 +24,7 @@ public class ServiceGraph extends Graph
 	static ArrayList vertices = null;
 	static ArrayList edges = null;
 	static Graph graph = null;
+	 File file = new File("results.txt");
 	
 	public ServiceGraph(int nVertices, int nEdges)
 	{
@@ -19,6 +32,11 @@ public class ServiceGraph extends Graph
         vertices = new ArrayList<>();
         edges = new ArrayList<>();
     }
+	
+	public ServiceGraph()
+	{
+		
+	}
 	
 	/**
 	 * Creates a new graph by adding vertices and edges to it.
@@ -28,6 +46,7 @@ public class ServiceGraph extends Graph
 	 * @param edges The array of edges to add to the graph.
 	 * @throws IllegalArgumentException if the vertices or edges are null or empty.
 	 */
+	
 	public static void CreateGraph()
 	{
 
@@ -131,6 +150,7 @@ public class ServiceGraph extends Graph
 		edges.add(PLFM);
 		
 		graph = new Graph(Graph.TYPE.UNDIRECTED,vertices, edges);
+		
 		System.out.println(graph);
 	}
 
@@ -185,9 +205,6 @@ public class ServiceGraph extends Graph
 	    return result;
 	}
 	
-
-
-	
 	/**
 	 * @return the graph representation of the service network
 	 */
@@ -196,14 +213,30 @@ public class ServiceGraph extends Graph
 		return graph;
 	}
 
+	
 	public static void showResults()
 	{
-		ArrayList<Edge> mst = PrimsAlgorithm(graph);
-	    for (Edge edge : mst) 
-	    {
-	    	System.out.println("..........................");
-	        System.out.println(edge.getCost());
-	    }
+		//Graph<Integer> graph = new Graph<>();
+		// add vertices and edges to the graph
+		ArrayList<Edge> minimumSpanningTree = PrimsAlgorithm(graph);
+		// do something with the minimum spanning tree, such as calculating its total weight
+		
+		try {
+            // create a PrintWriter object to write to the file
+            PrintWriter writer = new PrintWriter(new FileWriter("results.txt"));
+
+            // write each edge to the file on a new line
+            for (Edge e : minimumSpanningTree) {
+                writer.println(e.toString());
+            }
+
+            // close the writer
+            writer.close();
+
+            System.out.println("Results saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error saving results to file: " + e.getMessage());
+        }
 	}
 
 	

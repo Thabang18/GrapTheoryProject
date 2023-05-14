@@ -18,6 +18,7 @@ public class Main extends Application
 		ServiceGraph serviceGraph = new ServiceGraph(0, 0);
 	    
     	ServiceGraph.CreateGraph();
+    	//serviceGraph.showResults();
 		
         launch(args);
 	}
